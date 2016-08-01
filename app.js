@@ -1,7 +1,12 @@
+'use strict';
+
+var fs = require("fs");
+var https = require('https');
 var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var session = require('express-session');
+
 
 //used to store sessions in mongodb
 var MongoStore = require('connect-mongo')(session);
@@ -67,7 +72,16 @@ app.use(function(err, req, res, next) {
   });
 });
 
-// listen on port 3000
-app.listen(3000, function () {
-  console.log('Express app listening on port 3000');
+//listen on port 3000
+// app.listen(3000, function () {
+//   console.log('Express app listening on port 3000');
+// });
+
+//HTTPS
+var secureServer = https.createServer({
+    key: fs.readFileSync('./keys/key.pem', 'utf8'),
+    cert: fs.readFileSync('./keys/server.crt', 'utf8')
+  }, app)
+  .listen(3000, function () {
+    console.log('Secure Server listening on port ' + 3000);
 });
